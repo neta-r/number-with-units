@@ -16,7 +16,14 @@ namespace ariel {
 
 
     void NumberWithUnits::lineAnalysis(string input) {
-
+        size_t pos1 = input.find('=')-3*sizeof(char);
+        string firstUnit = input.substr(2, pos1);
+        size_t pos2 = input.find('=')+2*sizeof(char);
+        string afterFirst = input.substr(pos2);
+        size_t pos3 = afterFirst.find(' ');
+        string times = afterFirst.substr(0, pos3);
+        size_t pos4 = afterFirst.find(' ')+sizeof(char);
+        string secondUnit = afterFirst.substr(pos4);
     }
 
 
