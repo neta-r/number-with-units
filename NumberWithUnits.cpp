@@ -15,15 +15,46 @@ namespace ariel {
     }
 
 
+    //this function extract the relevant data from each line
     void NumberWithUnits::lineAnalysis(string input) {
-        size_t pos1 = input.find('=')-3*sizeof(char);
+        size_t pos1 = input.find('=') - 3 * sizeof(char);
         string firstUnit = input.substr(2, pos1);
-        size_t pos2 = input.find('=')+2*sizeof(char);
+        size_t pos2 = input.find('=') + 2 * sizeof(char);
         string afterFirst = input.substr(pos2);
         size_t pos3 = afterFirst.find(' ');
         string times = afterFirst.substr(0, pos3);
-        size_t pos4 = afterFirst.find(' ')+sizeof(char);
+        double timesNum = std::stod(times);
+        size_t pos4 = afterFirst.find(' ') + sizeof(char);
         string secondUnit = afterFirst.substr(pos4);
+        checkUnits(firstUnit, secondUnit, timesNum);
+    }
+
+    void NumberWithUnits::checkUnits(string firstUnit, string secondUnit, double timesNum) {
+        for (const auto &kv: map[firstUnit]) {
+            double what;
+            if (kv.second > 1) what = timesNum;
+            else what = 1 / timesNum;
+            map[secondUnit][kv.first] = kv.second * what;
+            map[kv.first][secondUnit] = 1 / (kv.second * what);
+        }
+//        for (const auto & kv: map[secondUnit]){
+//            double what;
+//            if (kv.second>1) what=times;
+//            else what=1/times;
+//            map[secondUnit][kv.first] = kv.second*what;
+//            map[kv.first][secondUnit] = 1(kv.second*what);
+//        }
+        map[firstUnit][secondUnit] = timesNum;
+        map[secondUnit][firstUnit] = 1 / timesNum;
+
+    }
+
+    void NumberWithUnits::print() {
+        for (const auto &kv: map) {
+            for (const auto &KV: map[kv.first]) {
+                cout << "first: " + kv.first + "second: " + KV.first + "val: " << KV.second << endl;
+            }
+        }
     }
 
 

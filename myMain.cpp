@@ -2,7 +2,6 @@
 // Created by neta on 10/04/2021.
 //
 
-#include "myMain.h"
 
 #include "NumberWithUnits.hpp"
 using namespace ariel;
