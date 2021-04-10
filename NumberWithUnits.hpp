@@ -1,17 +1,19 @@
-
+#include <iostream>
+#include <fstream>
+#include <string>
 namespace ariel {
     class NumberWithUnits {
     private:
         int number;
         std::string unit;
     public:
-        NumberWithUnits(int num, std::string un) {
+        NumberWithUnits(int num=0, std::string un="km") {
             number = num;
             unit = un;
             //TODO: add here checks for incorrect string format
         }
 
-        static void read_units(std::ifstream &file_name);
+        static void read_units(std::ifstream& units_file);
 
         const NumberWithUnits operator+(const NumberWithUnits &other) const;
 
@@ -41,7 +43,7 @@ namespace ariel {
 
         const NumberWithUnits operator++(int);
 
-        friend NumberWithUnits &operator*(const double num, const NumberWithUnits &c);
+        friend NumberWithUnits operator*(const double num, const NumberWithUnits &c);
 
         NumberWithUnits &operator*(const double num);
 

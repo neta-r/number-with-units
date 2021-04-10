@@ -9,6 +9,7 @@
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <typeinfo>
 using namespace std;
 
 #include "NumberWithUnits.hpp"
@@ -39,7 +40,7 @@ int main() {
   cout << a << endl;   // Prints "1700[kg]". Note that a has changed.
 
   try {
-    cout << (a+b) << endl;  
+    cout << (a+b) << endl;
   } catch (const std::exception& ex) {
     cout << ex.what() << endl; // Prints "Units do not match - [m] cannot be converted to [kg]"
   }
