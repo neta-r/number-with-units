@@ -1,19 +1,28 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <list>
+#include <vector>
+#include "node.cpp"
+
 namespace ariel {
     class NumberWithUnits {
     private:
         int number;
         std::string unit;
+        static std::vector <std::list<node>> units;
+
     public:
-        NumberWithUnits(int num=0, std::string un="km") {
+
+        NumberWithUnits(int num = 0, std::string un = "km") {
             number = num;
             unit = un;
             //TODO: add here checks for incorrect string format
         }
 
-        static void read_units(std::ifstream& units_file);
+        static void read_units(std::ifstream &units_file);
+
+        static void lineAnalysis(std::string input);
 
         const NumberWithUnits operator+(const NumberWithUnits &other) const;
 

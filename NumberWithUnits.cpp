@@ -5,7 +5,20 @@ using namespace std;
 namespace ariel {
     void NumberWithUnits::read_units(ifstream &units_file) {
 
+        if (units_file.is_open()) {
+            string line;
+            while (std::getline(units_file, line)) {
+                lineAnalysis(line);
+            }
+            units_file.close();
+        } else cout << "Unable to open file";
     }
+
+
+    void NumberWithUnits::lineAnalysis(string input) {
+
+    }
+
 
     const NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits &other) const {
         return NumberWithUnits();
