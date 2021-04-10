@@ -7,6 +7,6 @@
 using namespace ariel;
 
 int main() {
-    std::string line = "1 min = 60 sec";
-    NumberWithUnits::lineAnalysis(line);
+    std::ifstream units_file{"otherFile.txt"};
+    NumberWithUnits::read_units(units_file);
 }

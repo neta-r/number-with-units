@@ -3,6 +3,9 @@
 using namespace std;
 
 namespace ariel {
+
+    std::unordered_map <std::string, std::unordered_map<std::string, double>> NumberWithUnits::map = std::unordered_map <std::string, std::unordered_map<std::string, double>>();
+
     void NumberWithUnits::read_units(ifstream &units_file) {
 
         if (units_file.is_open()) {
@@ -11,6 +14,7 @@ namespace ariel {
                 lineAnalysis(line);
             }
             units_file.close();
+            print();
         } else cout << "Unable to open file";
     }
 
@@ -37,22 +41,16 @@ namespace ariel {
             map[secondUnit][kv.first] = kv.second * what;
             map[kv.first][secondUnit] = 1 / (kv.second * what);
         }
-//        for (const auto & kv: map[secondUnit]){
-//            double what;
-//            if (kv.second>1) what=times;
-//            else what=1/times;
-//            map[secondUnit][kv.first] = kv.second*what;
-//            map[kv.first][secondUnit] = 1(kv.second*what);
-//        }
         map[firstUnit][secondUnit] = timesNum;
         map[secondUnit][firstUnit] = 1 / timesNum;
 
     }
 
+    //print all of the possible converting from unit to unit
     void NumberWithUnits::print() {
         for (const auto &kv: map) {
             for (const auto &KV: map[kv.first]) {
-                cout << "first: " + kv.first + "second: " + KV.first + "val: " << KV.second << endl;
+                cout << "first: " + kv.first + ", second: " + KV.first + ", val: " << KV.second << endl;
             }
         }
     }

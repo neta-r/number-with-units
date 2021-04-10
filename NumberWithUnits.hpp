@@ -1,16 +1,23 @@
 #include <iostream>
-#include <unordered_map>
 #include <fstream>
 #include <string>
+#include <unordered_map>
 
 namespace ariel {
     class NumberWithUnits {
     private:
-        int number;
-        std::string unit;
-    public:
         static std::unordered_map <std::string, std::unordered_map<std::string, double>> map;
 
+        int number;
+
+        std::string unit;
+
+        static void lineAnalysis(std::string input);
+
+        static void checkUnits(std::string firstUnit, std::string secondUnit, double timesNum);
+
+        static void print();
+    public:
         NumberWithUnits(int num = 0, std::string un = "km") {
             number = num;
             unit = un;
@@ -18,16 +25,6 @@ namespace ariel {
         }
 
         static void read_units(std::ifstream &units_file);
-
-
-        //functions that should be private:
-        static void lineAnalysis(std::string input);
-
-        static void checkUnits(std::string firstUnit, std::string secondUnit, double timesNum);
-
-        void print();
-        //end
-
 
         const NumberWithUnits operator+(const NumberWithUnits &other) const;
 
