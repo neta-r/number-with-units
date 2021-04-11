@@ -1,4 +1,5 @@
 #include "NumberWithUnits.hpp"
+#include <exception>
 
 using namespace std;
 
@@ -14,7 +15,6 @@ namespace ariel {
                 lineAnalysis(line);
             }
             units_file.close();
-            print();
         } else cout << "Unable to open file";
     }
 
@@ -43,41 +43,65 @@ namespace ariel {
         }
         map[firstUnit][secondUnit] = timesNum;
         map[secondUnit][firstUnit] = 1 / timesNum;
-
-    }
-
-    //print all of the possible converting from unit to unit
-    void NumberWithUnits::print() {
-        for (const auto &kv: map) {
-            for (const auto &KV: map[kv.first]) {
-                cout << "first: " + kv.first + ", second: " + KV.first + ", val: " << KV.second << endl;
-            }
-        }
     }
 
 
     const NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits &other) const {
-        return NumberWithUnits();
+        try {
+            double times = map[other.unit][this->unit];
+            double newOther = other.number*times;
+            return NumberWithUnits(this->number+newOther, this->unit);
+        }
+        catch (exception ex) { // no possible way to convert the other NumberWithUnits to this type
+            string message = "Units do not match - ["+other.unit+"] cannot be converted to ["+this->unit+"]";
+            throw string(message);
+        }
     }
 
     const NumberWithUnits NumberWithUnits::operator-(const NumberWithUnits &other) const {
-        return NumberWithUnits();
+        try {
+            double times = map[other.unit][this->unit];
+            double newOther = other.number*times;
+            return NumberWithUnits(this->number-newOther, this->unit);
+        }
+        catch (exception ex) { // no possible way to convert the other NumberWithUnits to this type
+            string message = "Units do not match - ["+other.unit+"] cannot be converted to ["+this->unit+"]";
+            throw string(message);
+        }
     }
 
     NumberWithUnits &NumberWithUnits::operator+=(const NumberWithUnits &other) {
+        try {
+            double times = map[other.unit][this->unit];
+            double newOther = other.number*times;
+            this->number=this->number+newOther;
+        }
+        catch (exception ex) { // no possible way to convert the other NumberWithUnits to this type
+            string message = "Units do not match - ["+other.unit+"] cannot be converted to ["+this->unit+"]";
+            throw string(message);
+        }
         return *this;
     }
 
     NumberWithUnits &NumberWithUnits::operator-=(const NumberWithUnits &other) {
+        try {
+            double times = map[other.unit][this->unit];
+            double newOther = other.number*times;
+            this->number=this->number-newOther;
+        }
+        catch (exception ex) { // no possible way to convert the other NumberWithUnits to this type
+            string message = "Units do not match - ["+other.unit+"] cannot be converted to ["+this->unit+"]";
+            throw string(message);
+        }
         return *this;
     }
 
-    NumberWithUnits &NumberWithUnits::operator+() {
-        return *this;
+    NumberWithUnits NumberWithUnits::operator+() {
+        return NumberWithUnits(this->number, this->unit);
     }
 
-    NumberWithUnits &NumberWithUnits::operator-() {
-        return *this;
+    NumberWithUnits NumberWithUnits::operator-() {
+        return NumberWithUnits(this->number*(-1), this->unit);
     }
 
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
@@ -113,15 +137,16 @@ namespace ariel {
     }
 
     NumberWithUnits operator*(const double num, const NumberWithUnits &c) {
-        return NumberWithUnits();
+        return NumberWithUnits(c.number*num, c.unit);
     }
 
     NumberWithUnits &NumberWithUnits::operator*(const double num) {
+        this->number=this->number*num;
         return *this;
     }
 
     std::ostream &operator<<(std::ostream &os, const NumberWithUnits &c) {
-        return os;
+        return (os << c.number<< '[' << c.unit << ']');
     }
 
     std::istream &operator>>(std::istream &is, NumberWithUnits &c) {

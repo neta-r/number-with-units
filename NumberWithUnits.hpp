@@ -8,7 +8,7 @@ namespace ariel {
     private:
         static std::unordered_map <std::string, std::unordered_map<std::string, double>> map;
 
-        int number;
+        double number;
 
         std::string unit;
 
@@ -16,12 +16,15 @@ namespace ariel {
 
         static void checkUnits(std::string firstUnit, std::string secondUnit, double timesNum);
 
-        static void print();
     public:
-        NumberWithUnits(int num = 0, std::string un = "km") {
-            number = num;
-            unit = un;
-            //TODO: add here checks for incorrect string format
+        NumberWithUnits(double num = 0, std::string un = "km") {
+            if (map.find (un)!=map.end()){ //the unit exist in stock
+                number = num;
+                unit = un;
+            }
+            else{
+                throw std::invalid_argument{"no such unit in stock"};
+            }
         }
 
         static void read_units(std::ifstream &units_file);
@@ -34,9 +37,9 @@ namespace ariel {
 
         NumberWithUnits &operator-=(const NumberWithUnits &other);
 
-        NumberWithUnits &operator+();
+        NumberWithUnits operator+();
 
-        NumberWithUnits &operator-();
+        NumberWithUnits operator-();
 
         bool operator==(const NumberWithUnits &other) const;
 
