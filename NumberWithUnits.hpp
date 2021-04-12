@@ -14,12 +14,6 @@ namespace ariel {
 
         static void lineAnalysis(std::string input);
 
-        static std::string cutSpaces(std::string input);
-
-        static std::string cutExtra(std::string input);
-
-        static size_t findNumberPos(std::string input);
-
         static void checkUnits(std::string firstUnit, std::string secondUnit, double timesNum);
 
     public:

@@ -4,8 +4,6 @@ using namespace std;
 using namespace ariel;
 
 int main() {
-
-
     std::ifstream units_file{"otherFile.txt"};
     NumberWithUnits::read_units(units_file);
 //    try {
