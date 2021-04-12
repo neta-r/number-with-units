@@ -14,9 +14,12 @@ namespace ariel {
 
         static void lineAnalysis(std::string input);
 
+        static std::string cutSpaces(std::string input);
+
         static void checkUnits(std::string firstUnit, std::string secondUnit, double timesNum);
 
     public:
+
         NumberWithUnits(double num = 0, std::string un = "km") {
             if (map.find (un)!=map.end()){ //the unit exist in stock
                 number = num;

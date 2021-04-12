@@ -1,3 +1,8 @@
 1 km = 1000 m
-1 m = 100 cm
-1 cm = 1000 mm
+      1 km = 1000 m
+  1   kmmmm = 1000 m
+ 1    kmm = 1000 m
+1km=10m
+1 km= 10m
+1km = 10   m
+1 km=10 m

@@ -19,19 +19,32 @@ namespace ariel {
     }
 
 
-    //this function extract the relevant data from each line
     void NumberWithUnits::lineAnalysis(string input) {
-        size_t pos1 = input.find('=') - 3 * sizeof(char);
-        string firstUnit = input.substr(2, pos1);
-        size_t pos2 = input.find('=') + 2 * sizeof(char);
-        string afterFirst = input.substr(pos2);
-        size_t pos3 = afterFirst.find(' ');
-        string times = afterFirst.substr(0, pos3);
-        double timesNum = std::stod(times);
-        size_t pos4 = afterFirst.find(' ') + sizeof(char);
-        string secondUnit = afterFirst.substr(pos4);
-        checkUnits(firstUnit, secondUnit, timesNum);
+        size_t pos = input.find('1')+sizeof(char);
+        input = input.substr(pos);
+        input =  NumberWithUnits::cutSpaces(input);
+        pos = input.find('=');
+        string firstUnit = input.substr(0,pos);
+        size_t pos2 = input.find(' ');
+        if (pos != -1) { //there are spaces after the unit's name that we need to cut
+            firstUnit = firstUnit.substr(0,pos2);
+        }
+        input = input.substr(pos+sizeof(char));
+        input =  NumberWithUnits::cutSpaces(input);
     }
+
+    string NumberWithUnits::cutSpaces(string input){
+        int numOfSpaces = 0;
+        size_t i =0;
+        while (input.at(i)==' ') { //cutting all spaces before the first unit
+            i++;
+            numOfSpaces++;
+        }
+        input = input.substr(i);
+        return input;
+    }
+
+
 
     void NumberWithUnits::checkUnits(string firstUnit, string secondUnit, double timesNum) {
         for (const auto &kv: map[firstUnit]) {
