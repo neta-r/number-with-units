@@ -18,6 +18,7 @@ namespace ariel {
 
         static std::string cutExtra(std::string input);
 
+        static size_t findNumberPos(std::string input);
 
         static void checkUnits(std::string firstUnit, std::string secondUnit, double timesNum);
 

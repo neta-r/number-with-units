@@ -19,32 +19,30 @@ namespace ariel {
     }
 
 
+
     void NumberWithUnits::lineAnalysis(string input) {
+        //cutting until 1
         size_t pos = input.find('1')+sizeof(char);
         input = input.substr(pos);
         input =  NumberWithUnits::cutSpaces(input);
+        //finding the '=' and cutting the first unit's name
         pos = input.find('=');
-        string firstUnit = input.substr(0,pos);
-        size_t pos2 = input.find(' ');
-        if (pos != -1) { //there are spaces after the unit's name that we need to cut
-            firstUnit = firstUnit.substr(0,pos2);
-        }
-        input = input.substr(pos+sizeof(char));
+        string firstUnit = input.substr(0,pos); //cuts until "=" than clean the rest
+        firstUnit = NumberWithUnits::cutExtra(firstUnit);
+        input = input.substr(pos+sizeof(char)); //cleaning first unit's name from input
         input =  NumberWithUnits::cutSpaces(input);
-        int numOfDigits = 0;
-        size_t i =0;
-        while ((input.at(i)>='0' && input.at(i)<='9') || input.at(i)=='.') { //still a number
-            i++;
-            numOfDigits++;
-        }
+        //cutting the number
+        size_t i =NumberWithUnits::findNumberPos(input); //find out where thr number ends
         string num = input.substr(0,i);
         double times = std::stod(num);
-        input = input.substr(i);
+        input = input.substr(i); //cleaning number from input
         input =  NumberWithUnits::cutSpaces(input);
+        //cutting the second unit's name from what's left
         string secondUnit =  NumberWithUnits::cutExtra(input);
         NumberWithUnits::checkUnits(firstUnit, secondUnit, times);
     }
 
+    //clean the first spaces from the input
     string NumberWithUnits::cutSpaces(string input){
         int numOfSpaces = 0;
         size_t i =0;
@@ -56,15 +54,24 @@ namespace ariel {
         return input;
     }
 
+    //cuts the chars that are not letters from the end of the input
     string NumberWithUnits::cutExtra(string input){
         string ans;
-        int i=0;
         size_t cut =0;
-        for (i=0; i<input.length(); i++, cut++){
+        for (int i=0; i<input.length(); i++, cut++){
             if (input.at(cut)>='a'&&input.at(cut)<='z') ans=ans+input.at(cut);
             else break;
         }
         return ans;
+    }
+
+    //find out where the number ends
+    size_t NumberWithUnits::findNumberPos(string input){
+        size_t i =0;
+        while ((input.at(i)>='0' && input.at(i)<='9') || input.at(i)=='.') { //still a number
+            i++;
+        }
+        return i;
     }
 
     void NumberWithUnits::checkUnits(string firstUnit, string secondUnit, double timesNum) {
