@@ -16,6 +16,9 @@ namespace ariel {
 
         static std::string cutSpaces(std::string input);
 
+        static std::string cutExtra(std::string input);
+
+
         static void checkUnits(std::string firstUnit, std::string secondUnit, double timesNum);
 
     public:

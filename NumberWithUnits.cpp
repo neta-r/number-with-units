@@ -31,6 +31,18 @@ namespace ariel {
         }
         input = input.substr(pos+sizeof(char));
         input =  NumberWithUnits::cutSpaces(input);
+        int numOfDigits = 0;
+        size_t i =0;
+        while ((input.at(i)>='0' && input.at(i)<='9') || input.at(i)=='.') { //still a number
+            i++;
+            numOfDigits++;
+        }
+        string num = input.substr(0,i);
+        double times = std::stod(num);
+        input = input.substr(i);
+        input =  NumberWithUnits::cutSpaces(input);
+        string secondUnit =  NumberWithUnits::cutExtra(input);
+        NumberWithUnits::checkUnits(firstUnit, secondUnit, times);
     }
 
     string NumberWithUnits::cutSpaces(string input){
@@ -44,7 +56,16 @@ namespace ariel {
         return input;
     }
 
-
+    string NumberWithUnits::cutExtra(string input){
+        string ans;
+        int i=0;
+        size_t cut =0;
+        for (i=0; i<input.length(); i++, cut++){
+            if (input.at(cut)>='a'&&input.at(cut)<='z') ans=ans+input.at(cut);
+            else break;
+        }
+        return ans;
+    }
 
     void NumberWithUnits::checkUnits(string firstUnit, string secondUnit, double timesNum) {
         for (const auto &kv: map[firstUnit]) {
