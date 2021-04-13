@@ -5,7 +5,9 @@ using namespace std;
 
 namespace ariel {
 
-    std::unordered_map <std::string, std::unordered_map<std::string, double>> NumberWithUnits::map = std::unordered_map <std::string, std::unordered_map<std::string, double>>();
+    std::unordered_map <std::string, std::unordered_map<std::string, double>> NumberWithUnits::map =
+            std::unordered_map < std::string, std::unordered_map<std::string, double>>
+    ();
 
     void NumberWithUnits::read_units(ifstream &units_file) {
 
@@ -19,39 +21,38 @@ namespace ariel {
     }
 
 
-
     void NumberWithUnits::lineAnalysis(string input) {
-        string firstUnit, secondUnit , num;
+        string firstUnit, secondUnit, num;
         size_t i = 0;
         //skipping until char is a letter
-        while (input.at(i)<='A' || input.at(i)>='z' || (input.at(i)>'Z' && input.at(i)<'a')) i++;
+        while (input.at(i) <= 'A' || input.at(i) >= 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) i++;
         input = input.substr(i);
-        i=0;
+        i = 0;
         //reading all letters
-        while ((input.at(i)>='a' && input.at(i)<='z')||(input.at(i)>='A' && input.at(i)<='Z')) i++;
-        firstUnit = input.substr(0,i);
+        while ((input.at(i) >= 'a' && input.at(i) <= 'z') || (input.at(i) >= 'A' && input.at(i) <= 'Z')) i++;
+        firstUnit = input.substr(0, i);
         input = input.substr(i);
         i = 0;
         //skipping until char is a number
-        while (input.at(i)<='0' || input.at(i)>='9') i++;
+        while (input.at(i) <= '0' || input.at(i) >= '9') i++;
         input = input.substr(i);
-        i=0;
+        i = 0;
         //reading full number
-        while ((input.at(i)>='0' && input.at(i)<='9')||input.at(i)=='.') i++;
-        num = input.substr(0,i);
+        while ((input.at(i) >= '0' && input.at(i) <= '9') || input.at(i) == '.') i++;
+        num = input.substr(0, i);
         double times = std::stod(num);
         input = input.substr(i);
-        i=0;
+        i = 0;
         //skipping until char is a letter
-        while (input.at(i)<='A' || input.at(i)>='z' || (input.at(i)>'Z' && input.at(i)<'a')) i++;
+        while (input.at(i) <= 'A' || input.at(i) >= 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) i++;
         input = input.substr(i);
-        i=0;
+        i = 0;
         //reading full number
-        for (; i<input.size(); i++){
-            if (input.at(i)<='a'||input.at(i)>'z') break;
+        for (; i < input.size(); i++) {
+            if (input.at(i) <= 'a' || input.at(i) > 'z') break;
         }
-        if (i>0) secondUnit= input.substr(0,i);
-        else secondUnit= input;
+        if (i > 0) secondUnit = input.substr(0, i);
+        else secondUnit = input;
         NumberWithUnits::checkUnits(firstUnit, secondUnit, times);
     }
 
@@ -69,52 +70,46 @@ namespace ariel {
 
 
     const NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits &other) const {
-        try {
-            double times = map[other.unit][this->unit];
-            double newOther = other.number*times;
-            return NumberWithUnits(this->number+newOther, this->unit);
+        double times = map[other.unit][this->unit];
+        if (times == 0) { //times not found
+            string message =
+                    "Units do not match - [" + other.unit + "] cannot be converted to [" + this->unit + "]";
+            throw std::invalid_argument(message);
         }
-        catch (exception ex) { // no possible way to convert the other NumberWithUnits to this type
-            string message = "Units do not match - ["+other.unit+"] cannot be converted to ["+this->unit+"]";
-            throw string(message);
-        }
+        double newOther = other.number * times;
+        return NumberWithUnits(this->number + newOther, this->unit);
     }
 
     const NumberWithUnits NumberWithUnits::operator-(const NumberWithUnits &other) const {
-        try {
-            double times = map[other.unit][this->unit];
-            double newOther = other.number*times;
-            return NumberWithUnits(this->number-newOther, this->unit);
+        double times = map[other.unit][this->unit];
+        if (times == 0) { //times not found
+            string message =
+                    "Units do not match - [" + other.unit + "] cannot be converted to [" + this->unit + "]";
+            throw std::invalid_argument(message);
         }
-        catch (exception ex) { // no possible way to convert the other NumberWithUnits to this type
-            string message = "Units do not match - ["+other.unit+"] cannot be converted to ["+this->unit+"]";
-            throw string(message);
-        }
+        double newOther = other.number * times;
+        return NumberWithUnits(this->number - newOther, this->unit);
     }
 
     NumberWithUnits &NumberWithUnits::operator+=(const NumberWithUnits &other) {
-        try {
-            double times = map[other.unit][this->unit];
-            double newOther = other.number*times;
-            this->number=this->number+newOther;
+        double times = map[other.unit][this->unit];
+        if (times == 0) { //times not found
+            string message = "Units do not match - [" + other.unit + "] cannot be converted to [" + this->unit + "]";
+            throw std::invalid_argument(message);
         }
-        catch (exception ex) { // no possible way to convert the other NumberWithUnits to this type
-            string message = "Units do not match - ["+other.unit+"] cannot be converted to ["+this->unit+"]";
-            throw string(message);
-        }
+        double newOther = other.number * times;
+        this->number = this->number + newOther;
         return *this;
     }
 
     NumberWithUnits &NumberWithUnits::operator-=(const NumberWithUnits &other) {
-        try {
-            double times = map[other.unit][this->unit];
-            double newOther = other.number*times;
-            this->number=this->number-newOther;
+        double times = map[other.unit][this->unit];
+        if (times == 0) { //times not found
+            string message = "Units do not match - [" + other.unit + "] cannot be converted to [" + this->unit + "]";
+            throw std::invalid_argument(message);
         }
-        catch (exception ex) { // no possible way to convert the other NumberWithUnits to this type
-            string message = "Units do not match - ["+other.unit+"] cannot be converted to ["+this->unit+"]";
-            throw string(message);
-        }
+        double newOther = other.number * times;
+        this->number = this->number - newOther;
         return *this;
     }
 
@@ -123,97 +118,116 @@ namespace ariel {
     }
 
     NumberWithUnits NumberWithUnits::operator-() {
-        return NumberWithUnits(this->number*(-1), this->unit);
+        return NumberWithUnits(this->number * (-1), this->unit);
     }
 
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
         try {
             double times = map[other.unit][this->unit];
-            return this->number==other.number*times;
+            return this->number == other.number * times;
         }
         catch (exception ex) { // no possible way to convert from the two units
             string message = "Units does not match";
-            throw string(message);
+            throw std::invalid_argument(message);
         }
     }
 
     bool NumberWithUnits::operator!=(const NumberWithUnits &other) const {
-        try {
-            double times = map[other.unit][this->unit];
-            return this->number!=other.number*times;
-        }
-        catch (exception ex) { // no possible way to convert from the two units
-            string message = "Units does not match";
-            throw string(message);
-        }
+        return (!(*this == other));
     }
 
     bool NumberWithUnits::operator>(const NumberWithUnits &other) const {
         try {
             double times = map[other.unit][this->unit];
-            return this->number>other.number*times;
+            return this->number > other.number * times;
         }
         catch (exception ex) { // no possible way to convert from the two units
             string message = "Units does not match";
-            throw string(message);
+            throw std::invalid_argument(message);
         }
     }
 
     bool NumberWithUnits::operator<(const NumberWithUnits &other) const {
         try {
             double times = map[other.unit][this->unit];
-            return this->number<other.number*times;
+            return this->number < other.number * times;
         }
         catch (exception ex) { // no possible way to convert from the two units
             string message = "Units does not match";
-            throw string(message);
+            throw std::invalid_argument(message);
         }
     }
 
     bool NumberWithUnits::operator>=(const NumberWithUnits &other) const {
-        try {
-            double times = map[other.unit][this->unit];
-            return this->number>=other.number*times;
-        }
-        catch (exception ex) { // no possible way to convert from the two units
-            string message = "Units does not match";
-            throw string(message);
-        }
+        return (!(*this < other));
     }
 
     bool NumberWithUnits::operator<=(const NumberWithUnits &other) const {
-        try {
-            double times = map[other.unit][this->unit];
-            return this->number<=other.number*times;
-        }
-        catch (exception ex) { // no possible way to convert from the two units
-            string message = "Units does not match";
-            throw string(message);
-        }
+        return (!(*this > other));
     }
 
     NumberWithUnits &NumberWithUnits::operator++() {
+        this->number++;
         return *this;
     }
 
     const NumberWithUnits NumberWithUnits::operator++(int) {
-        return NumberWithUnits();
+        NumberWithUnits copy{this->number, this->unit};
+        this->number++;
+        return copy;
     }
 
-    NumberWithUnits operator*(const double num, const NumberWithUnits &c) {
-        return NumberWithUnits(c.number*num, c.unit);
-    }
-
-    NumberWithUnits &NumberWithUnits::operator*(const double num) {
-        this->number=this->number*num;
+    NumberWithUnits &NumberWithUnits::operator--() {
+        this->number--;
         return *this;
     }
 
+    const NumberWithUnits NumberWithUnits::operator--(int) {
+        NumberWithUnits copy{this->number, this->unit};
+        this->number--;
+        return copy;
+    }
+
+    NumberWithUnits operator*(const double num, const NumberWithUnits &c) {
+        return NumberWithUnits(c.number * num, c.unit);
+    }
+
+    NumberWithUnits NumberWithUnits::operator*(const double num) {
+        return NumberWithUnits(this->number * num, this->unit);
+    }
+
     std::ostream &operator<<(std::ostream &os, const NumberWithUnits &c) {
-        return (os << c.number<< '[' << c.unit << ']');
+        return (os << c.number << '[' << c.unit << ']');
+    }
+
+    static istream &getAndCheckNextCharIs(istream &input, char expectedChar) {
+        char actualChar;
+        input >> actualChar;
+        if (!input) return input;
+
+        if (actualChar != expectedChar)
+            // failbit is for format error
+            input.setstate(ios::failbit);
+        return input;
     }
 
     std::istream &operator>>(std::istream &is, NumberWithUnits &c) {
+        int num;
+        string un;
+        ios::pos_type startPosition = is.tellg();
+        if ((!(is >> std::skipws >> num)) ||
+            (!getAndCheckNextCharIs(is, '[')) ||
+            (!(is >> std::skipws >> un)) ||
+            (!(getAndCheckNextCharIs(is, ']')))) {
+            // rewind on error
+            auto errorState = is.rdstate(); // remember error state
+            is.clear(); // clear error so seekg will work
+            is.seekg(startPosition); // rewind
+            is.clear(errorState); // set back the error flag
+        } else {
+            c.number = num;
+            c.unit = un;
+        }
         return is;
     }
 };

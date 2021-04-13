@@ -58,9 +58,13 @@ namespace ariel {
 
         const NumberWithUnits operator++(int);
 
+        NumberWithUnits &operator--();
+
+        const NumberWithUnits operator--(int);
+
         friend NumberWithUnits operator*(const double num, const NumberWithUnits &c);
 
-        NumberWithUnits &operator*(const double num);
+        NumberWithUnits operator*(const double num);
 
         friend std::ostream &operator<<(std::ostream &os, const NumberWithUnits &c);
 
