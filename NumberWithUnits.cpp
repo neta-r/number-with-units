@@ -127,27 +127,69 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
-        return false;
+        try {
+            double times = map[other.unit][this->unit];
+            return this->number==other.number*times;
+        }
+        catch (exception ex) { // no possible way to convert from the two units
+            string message = "Units does not match";
+            throw string(message);
+        }
     }
 
     bool NumberWithUnits::operator!=(const NumberWithUnits &other) const {
-        return false;
+        try {
+            double times = map[other.unit][this->unit];
+            return this->number!=other.number*times;
+        }
+        catch (exception ex) { // no possible way to convert from the two units
+            string message = "Units does not match";
+            throw string(message);
+        }
     }
 
     bool NumberWithUnits::operator>(const NumberWithUnits &other) const {
-        return false;
+        try {
+            double times = map[other.unit][this->unit];
+            return this->number>other.number*times;
+        }
+        catch (exception ex) { // no possible way to convert from the two units
+            string message = "Units does not match";
+            throw string(message);
+        }
     }
 
     bool NumberWithUnits::operator<(const NumberWithUnits &other) const {
-        return false;
+        try {
+            double times = map[other.unit][this->unit];
+            return this->number<other.number*times;
+        }
+        catch (exception ex) { // no possible way to convert from the two units
+            string message = "Units does not match";
+            throw string(message);
+        }
     }
 
     bool NumberWithUnits::operator>=(const NumberWithUnits &other) const {
-        return false;
+        try {
+            double times = map[other.unit][this->unit];
+            return this->number>=other.number*times;
+        }
+        catch (exception ex) { // no possible way to convert from the two units
+            string message = "Units does not match";
+            throw string(message);
+        }
     }
 
     bool NumberWithUnits::operator<=(const NumberWithUnits &other) const {
-        return false;
+        try {
+            double times = map[other.unit][this->unit];
+            return this->number<=other.number*times;
+        }
+        catch (exception ex) { // no possible way to convert from the two units
+            string message = "Units does not match";
+            throw string(message);
+        }
     }
 
     NumberWithUnits &NumberWithUnits::operator++() {
