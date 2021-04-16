@@ -8,10 +8,6 @@
 
 namespace ariel {
     class Test {
-        std::string first_units[10];
-        std::string second_units[10];
-        double times[10];
-        int actual_size;
         int i = 1; //to keep track on filling up the arrays
         std::string write_unit(std::ofstream &file);
 
@@ -22,7 +18,13 @@ namespace ariel {
         void write_line(std::ofstream &file);
 
     public:
+        std::string first_units[10];
+        std::string second_units[10];
+        double times[10];
+        int actual_size;
         void rand_file();
+        std::string flip_letters(std::string str);
+
 
     };
 }
