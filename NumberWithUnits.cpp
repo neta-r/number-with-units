@@ -5,9 +5,19 @@ using namespace std;
 
 namespace ariel {
 
+
     std::unordered_map <std::string, std::unordered_map<std::string, double>> NumberWithUnits::map =
             std::unordered_map < std::string, std::unordered_map<std::string, double>>
     ();
+
+    string NumberWithUnits::getUnit (){
+        return this->unit;
+    }
+
+    double NumberWithUnits::getNum (){
+        return this->number;
+    }
+
 
     void NumberWithUnits::read_units(ifstream &units_file) {
 
@@ -126,9 +136,17 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
-        if(other.unit==this->unit&&other.number==this->number) return true;
+        if(this->unit==other.unit){
+            //next 4 lines in order to be able to compare 2 numbers
+            float first = (int)(this->number * 100);
+            return (float)first / 100;
+            float sec = (int)(other.number * 100);
+            return (float)sec / 100;
+            return first == sec;
+        }
         try {
             double times = map[other.unit][this->unit];
+            cout << times << endl;
             return this->number == other.number * times;
         }
         catch (exception ex) { // no possible way to convert from the two units

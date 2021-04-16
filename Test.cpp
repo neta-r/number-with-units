@@ -110,20 +110,32 @@ TEST_CASE ("test read_units and creating the right NumberWithUnits") {
     }
 }
 
-TEST_CASE ("test + and - ") {
-//    Test test;
-//    test.rand_file();
-//    ifstream units_file{"newText.txt"};
-//    NumberWithUnits::read_units(units_file);
-//    NumberWithUnits a(2, test.first_units[0]);
-//    NumberWithUnits b(2, test.first_units[1]);
-//    //the two units are from the same group- should be able to sum them up
-//    double res = 2+(test.times[0]*2);
-//    NumberWithUnits expected(res, test.first_units[1]);
-//    NumberWithUnits actual = b+a;
-//    CHECK(expected==actual);
+TEST_CASE ("test + and - good") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(2, test.first_units[0]);
+    NumberWithUnits b(2, test.first_units[1]);
+    //the two units are from the same group- should be able to sum them up
+    double res = 2+(test.times[0]*2);
+    NumberWithUnits expected1(res, test.first_units[1]);
+    CHECK(expected1==b+a);
+    res = 2-(test.times[0]*2);
+    NumberWithUnits expected2(res, test.first_units[1]);
+    CHECK(expected2==b+a);
 }
 
+TEST_CASE ("test + and - bad") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(2, test.first_units[0]);
+    NumberWithUnits b(2, test.first_units[test.actual_size-1]);
+    //the two units are not from the same group- should not be able to sum them up
+    CHECK_THROWS(a+b);
+}
 
 
 

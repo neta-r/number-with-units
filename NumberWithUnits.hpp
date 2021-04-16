@@ -24,11 +24,15 @@ namespace ariel {
                 unit = un;
             }
             else{
-                throw std::invalid_argument{"no such unit as "+un+" in stock"};
+                throw std::invalid_argument{"no such unit in stock"};
             }
         }
 
         static void read_units(std::ifstream &units_file);
+
+        std::string getUnit ();
+
+        double getNum ();
 
         const NumberWithUnits operator+(const NumberWithUnits &other) const;
 
