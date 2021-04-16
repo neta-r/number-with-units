@@ -44,7 +44,7 @@ namespace ariel {
         input = input.substr(i);
         i = 0;
         //skipping until char is a number
-        while (input.at(i) <= '0' || input.at(i) >= '9') i++;
+        while (input.at(i) < '0' || input.at(i) > '9') i++;
         input = input.substr(i);
         i = 0;
         //reading full number
@@ -54,12 +54,12 @@ namespace ariel {
         input = input.substr(i);
         i = 0;
         //skipping until char is a letter
-        while (input.at(i) <= 'A' || input.at(i) >= 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) i++;
+        while (input.at(i) < 'A' || input.at(i) > 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) i++;
         input = input.substr(i);
         i = 0;
-        //reading full number
+        //reading till end
         for (; i < input.size(); i++) {
-            if (input.at(i) <= 'a' || input.at(i) > 'z') break;
+            if ((input.at(i) < 'A' && input.at(i)>'z')|| (input.at(i) < 'a' && input.at(i)>'Z')) break;
         }
         if (i > 0) secondUnit = input.substr(0, i);
         else secondUnit = input;
@@ -146,8 +146,12 @@ namespace ariel {
         }
         try {
             double times = map[other.unit][this->unit];
-            cout << times << endl;
-            return this->number == other.number * times;
+            //next 4 lines in order to be able to compare 2 numbers
+            float first = (int)(this->number * 100);
+            return (float)first / 100;
+            float sec = (int)(other.number * times * 100);
+            return (float)sec / 100;
+            return first == sec;
         }
         catch (exception ex) { // no possible way to convert from the two units
             string message = "Units does not match";
