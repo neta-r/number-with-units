@@ -1,0 +1,28 @@
+/*
+ * the file would look something like that:
+ * 1 first_units[0] = times[0] second_units[0]
+ * 1 second_units[0] = times[1] second_units[1]
+ * ...
+ * 1 second_units[actual_size-1] = times[actual_size] second_units[actual_size]
+ */
+
+namespace ariel {
+    class Test {
+        std::string first_units[10];
+        std::string second_units[10];
+        double times[10];
+        int actual_size;
+        int i = 1; //to keep track on filling up the arrays
+        std::string write_unit(std::ofstream &file);
+
+        double write_num(std::ofstream &file);
+
+        void write_first_line(std::ofstream &file);
+
+        void write_line(std::ofstream &file);
+
+    public:
+        void rand_file();
+
+    };
+}
