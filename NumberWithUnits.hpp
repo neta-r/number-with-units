@@ -24,7 +24,7 @@ namespace ariel {
                 unit = un;
             }
             else{
-                throw std::invalid_argument{"no such unit in stock"};
+                throw std::invalid_argument{"no such unit as "+un+" in stock"};
             }
         }
 

@@ -72,8 +72,10 @@ namespace ariel {
 
     void Test::rand_file() {
         ofstream file;
-        file.open("unitTest.txt");
-        int num_of_lines = (rand() % 10) + 1;
+        file.open("newText.txt");
+//        int num_of_lines = (rand() % 10) + 1;
+//        if (num_of_lines<4) num_of_lines=4;
+        int num_of_lines = 6;
         actual_size=num_of_lines;
         write_first_line(file);
         for (int j = 1; j < num_of_lines/2; j++) write_line(file);
@@ -94,13 +96,14 @@ namespace ariel {
 };
 using namespace ariel;
 
+
 TEST_CASE ("test read_units and creating the right NumberWithUnits") {
     Test test;
     test.rand_file();
-    ifstream units_file{"unitTest.txt"};
+    ifstream units_file{"newText.txt"};
     NumberWithUnits::read_units(units_file);
     for (int j=0; j<test.actual_size; j++){
-        string unit=test.first_units[j];
+        string unit = test.first_units[j];
         DOCTEST_CHECK_NOTHROW(NumberWithUnits a(2, unit));
         string flipped_unit=test.flip_letters(unit);
         DOCTEST_CHECK_THROWS(NumberWithUnits b(2, flipped_unit));
@@ -108,10 +111,17 @@ TEST_CASE ("test read_units and creating the right NumberWithUnits") {
 }
 
 TEST_CASE ("test + and - ") {
-    Test test;
-    test.rand_file();
-    ifstream units_file{"unitTest.txt"};
-    NumberWithUnits::read_units(units_file);
+//    Test test;
+//    test.rand_file();
+//    ifstream units_file{"newText.txt"};
+//    NumberWithUnits::read_units(units_file);
+//    NumberWithUnits a(2, test.first_units[0]);
+//    NumberWithUnits b(2, test.first_units[1]);
+//    //the two units are from the same group- should be able to sum them up
+//    double res = 2+(test.times[0]*2);
+//    NumberWithUnits expected(res, test.first_units[1]);
+//    NumberWithUnits actual = b+a;
+//    CHECK(expected==actual);
 }
 
 

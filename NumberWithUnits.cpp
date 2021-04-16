@@ -25,7 +25,7 @@ namespace ariel {
         string firstUnit, secondUnit, num;
         size_t i = 0;
         //skipping until char is a letter
-        while (input.at(i) <= 'A' || input.at(i) >= 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) i++;
+        while (input.at(i) < 'A' || input.at(i) > 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) i++;
         input = input.substr(i);
         i = 0;
         //reading all letters
@@ -63,9 +63,13 @@ namespace ariel {
             else what = 1 / timesNum;
             map[secondUnit][kv.first] = kv.second * what;
             map[kv.first][secondUnit] = 1 / (kv.second * what);
+            //cout << "map[" << secondUnit <<"][" << kv.first << "] = " << kv.second * what <<endl;
+            //cout << "map[" << kv.first <<"][" << secondUnit << "] = " << 1 / (kv.second * what) <<endl;
         }
         map[firstUnit][secondUnit] = timesNum;
         map[secondUnit][firstUnit] = 1 / timesNum;
+        //cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << timesNum <<endl;
+        //cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << 1 / timesNum <<endl;
     }
 
 
@@ -122,6 +126,7 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
+        if(other.unit==this->unit&&other.number==this->number) return true;
         try {
             double times = map[other.unit][this->unit];
             return this->number == other.number * times;
