@@ -198,7 +198,7 @@ TEST_CASE ("test < and > good") {
     actual = a > c;
             CHECK(false == actual);
     actual = a < c;
-           CHECK(false == actual);
+            CHECK(false == actual);
 }
 
 TEST_CASE ("test < and > bad") {
@@ -209,16 +209,16 @@ TEST_CASE ("test < and > bad") {
     NumberWithUnits a(1, test.first_units[0]);
     NumberWithUnits b(2, test.first_units[test.actual_size - 1]);
     //the two units are not from the same group- should not be able to compare them
-    try{
+    try {
         bool ans = a > b;
-        FAIL(ans);
+                FAIL(ans);
     }
-    catch (exception ex){}
-    try{
+    catch (exception ex) {}
+    try {
         bool ans = a < b;
-        FAIL(ans);
+                FAIL(ans);
     }
-    catch (exception ex){}
+    catch (exception ex) {}
 }
 
 
@@ -241,26 +241,6 @@ TEST_CASE ("test <= and >= good") {
             CHECK(true == actual);
 }
 
-
-TEST_CASE ("test <= and >= bad") {
-    Test test;
-    test.rand_file();
-    ifstream units_file{"newText.txt"};
-    NumberWithUnits::read_units(units_file);
-    NumberWithUnits a(1, test.first_units[0]);
-    NumberWithUnits b(2, test.first_units[test.actual_size - 1]);
-    //the two units are not from the same group- should not be able to compare them
-    try{
-        bool ans = a >= b;
-                FAIL(ans);
-    }
-    catch (exception ex){}
-    try{
-        bool ans = a <= b;
-                FAIL(ans);
-    }
-    catch (exception ex){}
-}
 
 TEST_CASE ("test == and != good") {
     Test test;
@@ -289,17 +269,73 @@ TEST_CASE ("test == and != bad") {
     NumberWithUnits a(1, test.first_units[0]);
     NumberWithUnits b(2, test.first_units[test.actual_size - 1]);
     //the two units are not from the same group- should not be able to compare them
-    try{
+    try {
         bool ans = a == b;
                 FAIL(ans);
     }
-    catch (exception ex){}
-    try{
+    catch (exception ex) {}
+    try {
         bool ans = a == b;
                 FAIL(ans);
     }
-    catch (exception ex){}
+    catch (exception ex) {}
 }
 
 
+TEST_CASE ("test <= and >= bad") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    NumberWithUnits b(2, test.first_units[test.actual_size - 1]);
+    //the two units are not from the same group- should not be able to compare them
+    try {
+        bool ans = a >= b;
+                FAIL(ans);
+    }
+    catch (exception ex) {}
+    try {
+        bool ans = a <= b;
+                FAIL(ans);
+    }
+    catch (exception ex) {}
+}
 
+TEST_CASE ("test ++ and --") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    NumberWithUnits expected1(2, test.first_units[0]);
+    ++a;
+            CHECK(expected1 == a);
+    NumberWithUnits expected2(3, test.first_units[0]);
+    a++;
+            CHECK(expected2 == a);
+    --a;
+            CHECK(expected1 == a);
+    a--;
+    NumberWithUnits expected3(1, test.first_units[0]);
+            CHECK(expected3 == a);
+}
+
+TEST_CASE ("test *") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    NumberWithUnits expected1(2, test.first_units[0]);
+    NumberWithUnits actual1= a*2;
+            CHECK(expected1 == actual1);
+    NumberWithUnits expected2(1, test.first_units[0]);
+            CHECK(expected2 == a);
+    NumberWithUnits b(1, test.first_units[test.actual_size - 1]);
+    NumberWithUnits expected3(2, test.first_units[test.actual_size - 1]);
+    NumberWithUnits actual3= 2*b;
+            CHECK(expected3 == actual3);
+    NumberWithUnits expected4(1, test.first_units[test.actual_size - 1]);
+            CHECK(expected4 == b);
+}

@@ -29,4 +29,4 @@ tidy:
 
 
 clean:
-	rm -f *.o demo test unitTest.txt
+	rm -f *.o demo test newText.txt
