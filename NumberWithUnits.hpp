@@ -36,9 +36,9 @@ namespace ariel {
 
         static float round(double num);
 
-        const NumberWithUnits operator+(const NumberWithUnits &other) const;
+        NumberWithUnits operator+(const NumberWithUnits &other) const;
 
-        const NumberWithUnits operator-(const NumberWithUnits &other) const;
+        NumberWithUnits operator-(const NumberWithUnits &other) const;
 
         NumberWithUnits &operator+=(const NumberWithUnits &other);
 
@@ -62,11 +62,11 @@ namespace ariel {
 
         NumberWithUnits &operator++();
 
-        const NumberWithUnits operator++(int);
+        NumberWithUnits operator++(int);
 
         NumberWithUnits &operator--();
 
-        const NumberWithUnits operator--(int);
+        NumberWithUnits operator--(int);
 
         friend NumberWithUnits operator*(const double num, const NumberWithUnits &c);
 

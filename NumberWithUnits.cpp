@@ -107,7 +107,7 @@ namespace ariel {
     }
 
 
-    const NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits &other) const {
+    NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits &other) const {
         double times = map[other.unit][this->unit];
         if (times == 0) { //times not found
             string message =
@@ -118,7 +118,7 @@ namespace ariel {
         return NumberWithUnits(this->number + newOther, this->unit);
     }
 
-    const NumberWithUnits NumberWithUnits::operator-(const NumberWithUnits &other) const {
+    NumberWithUnits NumberWithUnits::operator-(const NumberWithUnits &other) const {
         double times = map[other.unit][this->unit];
         if (times == 0) { //times not found
             string message =
@@ -222,7 +222,7 @@ namespace ariel {
         return *this;
     }
 
-    const NumberWithUnits NumberWithUnits::operator++(int) {
+    NumberWithUnits NumberWithUnits::operator++(int) {
         NumberWithUnits copy{this->number, this->unit};
         this->number++;
         return copy;
@@ -233,7 +233,7 @@ namespace ariel {
         return *this;
     }
 
-    const NumberWithUnits NumberWithUnits::operator--(int) {
+    NumberWithUnits NumberWithUnits::operator--(int) {
         NumberWithUnits copy{this->number, this->unit};
         this->number--;
         return copy;
