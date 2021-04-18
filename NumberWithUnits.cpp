@@ -10,11 +10,11 @@ namespace ariel {
             std::unordered_map < std::string, std::unordered_map<std::string, double>>
     ();
 
-    string NumberWithUnits::getUnit (){
+    string NumberWithUnits::getUnit() {
         return this->unit;
     }
 
-    double NumberWithUnits::getNum (){
+    double NumberWithUnits::getNum() {
         return this->number;
     }
 
@@ -59,7 +59,7 @@ namespace ariel {
         i = 0;
         //reading till end
         for (; i < input.size(); i++) {
-            if ((input.at(i) < 'A' && input.at(i)>'z')|| (input.at(i) < 'a' && input.at(i)>'Z')) break;
+            if ((input.at(i) < 'A' && input.at(i) > 'z') || (input.at(i) < 'a' && input.at(i) > 'Z')) break;
         }
         if (i > 0) secondUnit = input.substr(0, i);
         else secondUnit = input;
@@ -135,28 +135,28 @@ namespace ariel {
         return NumberWithUnits(this->number * (-1), this->unit);
     }
 
+    float NumberWithUnits::round(double num) const{
+        float newNum = (int) (num * 100);
+        newNum = (float) newNum / 100;
+        return newNum;
+    }
+
+
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
-        if(this->unit==other.unit){
-            //next 4 lines in order to be able to compare 2 numbers
-            float first = (int)(this->number * 100);
-            return (float)first / 100;
-            float sec = (int)(other.number * 100);
-            return (float)sec / 100;
+        if (this->unit == other.unit) {
+            float first = round(this->number);
+            float sec = round(other.number);
             return first == sec;
         }
-        try {
-            double times = map[other.unit][this->unit];
-            //next 4 lines in order to be able to compare 2 numbers
-            float first = (int)(this->number * 100);
-            return (float)first / 100;
-            float sec = (int)(other.number * times * 100);
-            return (float)sec / 100;
-            return first == sec;
-        }
-        catch (exception ex) { // no possible way to convert from the two units
+        double times = map[other.unit][this->unit];
+        if (times == 0) { // no possible way to convert from the two units
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
+        float first = round(this->number);
+        float sec = round(other.number*times);
+        return first == sec;
+
     }
 
     bool NumberWithUnits::operator!=(const NumberWithUnits &other) const {
@@ -164,25 +164,25 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator>(const NumberWithUnits &other) const {
-        try {
-            double times = map[other.unit][this->unit];
-            return this->number > other.number * times;
-        }
-        catch (exception ex) { // no possible way to convert from the two units
+        double times = map[other.unit][this->unit];
+        if (times == 0) {// no possible way to convert from the two units
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
+        float first = round(this->number);
+        float sec = round(other.number*times);
+        return first > sec;
     }
 
     bool NumberWithUnits::operator<(const NumberWithUnits &other) const {
-        try {
-            double times = map[other.unit][this->unit];
-            return this->number < other.number * times;
-        }
-        catch (exception ex) { // no possible way to convert from the two units
+        double times = map[other.unit][this->unit];
+        if (times == 0) {// no possible way to convert from the two units
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
+        float first = round(this->number);
+        float sec = round(other.number*times);
+        return first < sec;
     }
 
     bool NumberWithUnits::operator>=(const NumberWithUnits &other) const {

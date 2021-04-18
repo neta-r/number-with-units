@@ -34,6 +34,8 @@ namespace ariel {
 
         double getNum ();
 
+        float round(double num) const;
+
         const NumberWithUnits operator+(const NumberWithUnits &other) const;
 
         const NumberWithUnits operator-(const NumberWithUnits &other) const;

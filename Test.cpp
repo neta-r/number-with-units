@@ -94,7 +94,7 @@ namespace ariel {
         return ans;
     }
 
-};
+}
 using namespace ariel;
 
 
@@ -126,7 +126,7 @@ TEST_CASE ("test + and - good") {
             CHECK(expected1 == b + a);
     res = 2 - (test.times[0] * 2);
     NumberWithUnits expected2(res, test.first_units[1]);
-            CHECK(expected2 == b + a);
+            CHECK(expected2 == b - a);
 }
 
 TEST_CASE ("test + and - bad") {
@@ -153,8 +153,7 @@ TEST_CASE ("test += and -= good") {
     NumberWithUnits expected1(res, test.first_units[1]);
     b += a;
             CHECK(expected1 == b);
-    res = 2 - (test.times[0] * 2);
-    NumberWithUnits expected2(res, test.first_units[1]);
+    NumberWithUnits expected2(2, test.first_units[1]);
     b -= a;
             CHECK(expected2 == b);
 }
@@ -190,7 +189,7 @@ TEST_CASE ("test < and > good") {
     NumberWithUnits::read_units(units_file);
     NumberWithUnits a(1, test.first_units[0]);
     NumberWithUnits b(1, test.first_units[1]);
-    //the two units are from the same group- should be able to sum them up
+    //the two units are from the same group- should be able to compare them
     bool actual = b < a;
             CHECK(true == actual);
     actual = b > a;
@@ -199,13 +198,108 @@ TEST_CASE ("test < and > good") {
     actual = a > c;
             CHECK(false == actual);
     actual = a < c;
-    cout << actual << endl;
-//            CHECK(false == actual); //weirdly does not work
+           CHECK(false == actual);
+}
+
+TEST_CASE ("test < and > bad") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    NumberWithUnits b(2, test.first_units[test.actual_size - 1]);
+    //the two units are not from the same group- should not be able to compare them
+    try{
+        bool ans = a > b;
+        FAIL(ans);
+    }
+    catch (exception ex){}
+    try{
+        bool ans = a < b;
+        FAIL(ans);
+    }
+    catch (exception ex){}
 }
 
 
+TEST_CASE ("test <= and >= good") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    NumberWithUnits b(1, test.first_units[1]);
+    //the two units are from the same group- should be able to compare them
+    bool actual = b <= a;
+            CHECK(true == actual);
+    actual = b >= a;
+            CHECK(false == actual);
+    NumberWithUnits c(test.times[0], test.second_units[0]); //c==a in a different unit of measure
+    actual = a >= c;
+            CHECK(true == actual);
+    actual = a <= c;
+            CHECK(true == actual);
+}
 
 
+TEST_CASE ("test <= and >= bad") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    NumberWithUnits b(2, test.first_units[test.actual_size - 1]);
+    //the two units are not from the same group- should not be able to compare them
+    try{
+        bool ans = a >= b;
+                FAIL(ans);
+    }
+    catch (exception ex){}
+    try{
+        bool ans = a <= b;
+                FAIL(ans);
+    }
+    catch (exception ex){}
+}
+
+TEST_CASE ("test == and != good") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    NumberWithUnits b(1, test.first_units[1]);
+    //the two units are from the same group- should be able to compare them
+    bool actual = b == a;
+            CHECK(false == actual);
+    actual = b != a;
+            CHECK(true == actual);
+    NumberWithUnits c(test.times[0], test.second_units[0]); //c==a in a different unit of measure
+    actual = a == c;
+            CHECK(true == actual);
+    actual = a != c;
+            CHECK(false == actual);
+}
+
+TEST_CASE ("test == and != bad") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    NumberWithUnits b(2, test.first_units[test.actual_size - 1]);
+    //the two units are not from the same group- should not be able to compare them
+    try{
+        bool ans = a == b;
+                FAIL(ans);
+    }
+    catch (exception ex){}
+    try{
+        bool ans = a == b;
+                FAIL(ans);
+    }
+    catch (exception ex){}
+}
 
 
 
