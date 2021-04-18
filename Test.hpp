@@ -33,7 +33,5 @@ namespace ariel {
         int actual_size;
         void rand_file();
         std::string flip_letters(std::string str);
-
-
     };
 }

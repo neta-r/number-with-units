@@ -40,7 +40,7 @@ namespace ariel {
         string secondUnit;
         input.erase(input.find_first_of('='),1);
         input.erase(input.find_first_of('1'),1);
-        double times;
+        double times=0;
         istringstream stream(input);
         stream >> firstUnit >> times >> secondUnit;
         NumberWithUnits::checkUnits(firstUnit, secondUnit, times);
