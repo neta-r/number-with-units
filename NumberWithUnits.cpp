@@ -1,5 +1,6 @@
 #include "NumberWithUnits.hpp"
 #include <exception>
+#include <sstream>
 
 using namespace std;
 
@@ -36,74 +37,46 @@ namespace ariel {
     void NumberWithUnits::lineAnalysis(string input) {
         string firstUnit;
         string secondUnit;
-        string num;
-        size_t i = 0;
-        //skipping until char is a letter
-        while (input.at(i) < 'A' || input.at(i) > 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) {
-            i++;
-        }
-        input = input.substr(i);
-        i = 0;
-        //reading all letters
-        while ((input.at(i) >= 'a' && input.at(i) <= 'z') || (input.at(i) >= 'A' && input.at(i) <= 'Z')){
-            i++;
-        }
-        firstUnit = input.substr(0, i);
-        input = input.substr(i);
-        i = 0;
-        //skipping until char is a number
-        while (input.at(i) < '0' || input.at(i) > '9'){
-            i++;
-        }
-        input = input.substr(i);
-        i = 0;
-        //reading full number
-        while ((input.at(i) >= '0' && input.at(i) <= '9') || input.at(i) == '.') {
-            i++;
-        }
-        num = input.substr(0, i);
-        double times = std::stod(num);
-        input = input.substr(i);
-        i = 0;
-        //skipping until char is a letter
-        while (input.at(i) < 'A' || input.at(i) > 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) {
-            i++;
-        }
-        input = input.substr(i);
-        i = 0;
-        //reading till end
-        for (; i < input.size(); i++) {
-            if ((input.at(i) < 'A' && input.at(i) > 'z') || (input.at(i) < 'a' && input.at(i) > 'Z')) {
-                break;
-            }
-        }
-        if (i > 0){
-            secondUnit = input.substr(0, i);
-        }
-        else {
-            secondUnit = input;
-        }
+        input.erase(input.find_first_of('='),1);
+        input.erase(input.find_first_of('1'),1);
+        double times;
+        istringstream stream(input);
+        stream >> firstUnit >> times >> secondUnit;
         NumberWithUnits::checkUnits(firstUnit, secondUnit, times);
     }
 
     void NumberWithUnits::checkUnits(const string& firstUnit,const string& secondUnit, double timesNum) {
         for (const auto &kv: map[firstUnit]) {
-            double what=0;
-            if (kv.second > 1){
-                what = timesNum;
+            if(map[secondUnit][kv.first]==0) {
+                double what = 0;
+                if (kv.second > 1) {
+                    what = timesNum;
+                } else {
+                    what = 1 / timesNum;
+                }
+                map[kv.first][secondUnit] = 1 / (kv.second * what);
+                //cout << "map[" << secondUnit << "][" << kv.first << "] = " << kv.second * what << endl;
+                //cout << "map[" << kv.first << "][" << secondUnit << "] = " << 1 / (kv.second * what) << endl;
             }
-            else {
-                what = 1 / timesNum;
-            }
-            map[secondUnit][kv.first] = kv.second * what;
-            map[kv.first][secondUnit] = 1 / (kv.second * what);
-            //cout << "map[" << secondUnit <<"][" << kv.first << "] = " << kv.second * what <<endl;
-            //cout << "map[" << kv.first <<"][" << secondUnit << "] = " << 1 / (kv.second * what) <<endl;
         }
-        map[firstUnit][secondUnit] = timesNum;
-        map[secondUnit][firstUnit] = 1 / timesNum;
-        //cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << timesNum <<endl;
-        //cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << 1 / timesNum <<endl;
+        for (const auto &kv: map[secondUnit]) {
+            if(map[firstUnit][kv.first]==0){
+                double what=0;
+                if (kv.second > 1){
+                    what = timesNum;
+                }
+                else {
+                    what = 1 / timesNum;
+                }
+                map[firstUnit][kv.first] = kv.second * what;
+                //cout << "map[" << firstUnit <<"][" << kv.first << "] = " << kv.second * what <<endl;
+                //cout << "map[" << kv.first <<"][" << firstUnit << "] = " << 1 / (kv.second * what) <<endl;
+            }
+        }
+        map[secondUnit][firstUnit] = timesNum;
+        map[firstUnit][secondUnit] = 1 / timesNum;
+        //cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << timesNum <<endl;
+        //cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << 1 / timesNum <<endl;
     }
 
 
