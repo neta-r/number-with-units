@@ -147,14 +147,13 @@ TEST_CASE ("test += and -= good") {
     test.rand_file();
     ifstream units_file{"newText.txt"};
     NumberWithUnits::read_units(units_file);
-    NumberWithUnits a(2, test.first_units[0]);
-    NumberWithUnits b(2, test.first_units[1]);
+    NumberWithUnits a(1/(test.times[0]), test.first_units[0]);
+    NumberWithUnits b(1, test.first_units[1]);
     //the two units are from the same group- should be able to sum them up
-    double res = 2 + (test.times[0] * 2);
-    NumberWithUnits expected1(res, test.first_units[1]);
-    b += a;
+    NumberWithUnits expected1(2, test.first_units[1]);
+    b+=a;
             CHECK(expected1 == b);
-    NumberWithUnits expected2(2, test.first_units[1]);
+    NumberWithUnits expected2(1, test.first_units[1]);
     b -= a;
             CHECK(expected2 == b);
 }

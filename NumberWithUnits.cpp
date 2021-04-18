@@ -5,6 +5,7 @@
 using namespace std;
 
 namespace ariel {
+    const double epsilon = 0.001;
     const int base = 100;
 
     std::unordered_map <std::string, std::unordered_map<std::string, double>> NumberWithUnits::map =
@@ -134,27 +135,17 @@ namespace ariel {
         return NumberWithUnits(this->number * (-1), this->unit);
     }
 
-    float NumberWithUnits::round(double num){
-        float newNum = (int) (num * base);
-        newNum = (float) newNum / base;
-        return newNum;
-    }
-
 
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
         if (this->unit == other.unit) {
-            float first = round(this->number);
-            float sec = round(other.number);
-            return first == sec;
+            return std::abs(this->number-other.number)<epsilon;
         }
         double times = map[other.unit][this->unit];
         if (times == 0) { // no possible way to convert from the two units
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
-        float first = round(this->number);
-        float sec = round(other.number*times);
-        return first == sec;
+        return std::abs(this->number-other.number*times)<epsilon;
 
     }
 
@@ -168,9 +159,7 @@ namespace ariel {
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
-        float first = round(this->number);
-        float sec = round(other.number*times);
-        return first > sec;
+        return this->number >= (other.number*times)+epsilon;
     }
 
     bool NumberWithUnits::operator<(const NumberWithUnits &other) const {
@@ -179,9 +168,8 @@ namespace ariel {
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
-        float first = round(this->number);
-        float sec = round(other.number*times);
-        return first < sec;
+        return this->number <= (other.number*times)-epsilon;
+
     }
 
     bool NumberWithUnits::operator>=(const NumberWithUnits &other) const {
