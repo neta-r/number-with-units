@@ -75,9 +75,8 @@ namespace ariel {
     void Test::rand_file() {
         ofstream file;
         file.open("newText.txt");
-//        int num_of_lines = (rand() % 10) + 1;
-//        if (num_of_lines<4) num_of_lines=4;
-        int num_of_lines = 6;
+        int num_of_lines = (rand() % 10) + 1;
+        if (num_of_lines<4) num_of_lines=4;
         actual_size = num_of_lines;
         write_first_line(file);
         for (int j = 1; j < num_of_lines / 2; j++) write_line(file);
