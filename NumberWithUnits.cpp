@@ -54,9 +54,10 @@ namespace ariel {
                 } else {
                     what = 1 / timesNum;
                 }
-                map[kv.first][secondUnit] = 1 / (kv.second * what);
-                //cout << "map[" << secondUnit << "][" << kv.first << "] = " << kv.second * what << endl;
-                //cout << "map[" << kv.first << "][" << secondUnit << "] = " << 1 / (kv.second * what) << endl;
+                map[kv.first][secondUnit] =1/(kv.second * what);
+                map[secondUnit][kv.first] =kv.second * what;
+                //cout << "map[" << kv.first << "][" << secondUnit << "] = " << 1/(kv.second * what) << endl;
+                //cout << "map[" << secondUnit << "][" << kv.first << "] = " <<kv.second * what<< endl;
             }
         }
         for (const auto &kv: map[secondUnit]) {
@@ -69,14 +70,15 @@ namespace ariel {
                     what = 1 / timesNum;
                 }
                 map[firstUnit][kv.first] = kv.second * what;
-                //cout << "map[" << firstUnit <<"][" << kv.first << "] = " << kv.second * what <<endl;
-                //cout << "map[" << kv.first <<"][" << firstUnit << "] = " << 1 / (kv.second * what) <<endl;
+                map[kv.first ][firstUnit] =1/( kv.second * what);
+                //cout << "map[" << firstUnit <<"][" << kv.first << "] = " << kv.second * what<<endl;
+                //cout << "map[" << kv.first <<"][" << firstUnit << "] = " << 1/( kv.second * what) <<endl;
             }
         }
-        map[secondUnit][firstUnit] = timesNum;
-        map[firstUnit][secondUnit] = 1 / timesNum;
-        //cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << timesNum <<endl;
-        //cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << 1 / timesNum <<endl;
+        map[firstUnit][secondUnit] =timesNum;
+        map[secondUnit][firstUnit] =1/ timesNum;
+        //cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << timesNum <<endl;
+        //cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << 1 / timesNum <<endl;
     }
 
 
