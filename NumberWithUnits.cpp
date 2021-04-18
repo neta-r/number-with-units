@@ -4,7 +4,7 @@
 using namespace std;
 
 namespace ariel {
-
+    const int base = 100;
 
     std::unordered_map <std::string, std::unordered_map<std::string, double>> NumberWithUnits::map =
             std::unordered_map < std::string, std::unordered_map<std::string, double>>
@@ -14,7 +14,7 @@ namespace ariel {
         return this->unit;
     }
 
-    double NumberWithUnits::getNum() {
+    double NumberWithUnits::getNum() const{
         return this->number;
     }
 
@@ -27,50 +27,74 @@ namespace ariel {
                 lineAnalysis(line);
             }
             units_file.close();
-        } else cout << "Unable to open file";
+        }
+        else{
+            cout << "Unable to open file";
+        }
     }
 
-
     void NumberWithUnits::lineAnalysis(string input) {
-        string firstUnit, secondUnit, num;
+        string firstUnit;
+        string secondUnit;
+        string num;
         size_t i = 0;
         //skipping until char is a letter
-        while (input.at(i) < 'A' || input.at(i) > 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) i++;
+        while (input.at(i) < 'A' || input.at(i) > 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) {
+            i++;
+        }
         input = input.substr(i);
         i = 0;
         //reading all letters
-        while ((input.at(i) >= 'a' && input.at(i) <= 'z') || (input.at(i) >= 'A' && input.at(i) <= 'Z')) i++;
+        while ((input.at(i) >= 'a' && input.at(i) <= 'z') || (input.at(i) >= 'A' && input.at(i) <= 'Z')){
+            i++;
+        }
         firstUnit = input.substr(0, i);
         input = input.substr(i);
         i = 0;
         //skipping until char is a number
-        while (input.at(i) < '0' || input.at(i) > '9') i++;
+        while (input.at(i) < '0' || input.at(i) > '9'){
+            i++;
+        }
         input = input.substr(i);
         i = 0;
         //reading full number
-        while ((input.at(i) >= '0' && input.at(i) <= '9') || input.at(i) == '.') i++;
+        while ((input.at(i) >= '0' && input.at(i) <= '9') || input.at(i) == '.') {
+            i++;
+        }
         num = input.substr(0, i);
         double times = std::stod(num);
         input = input.substr(i);
         i = 0;
         //skipping until char is a letter
-        while (input.at(i) < 'A' || input.at(i) > 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) i++;
+        while (input.at(i) < 'A' || input.at(i) > 'z' || (input.at(i) > 'Z' && input.at(i) < 'a')) {
+            i++;
+        }
         input = input.substr(i);
         i = 0;
         //reading till end
         for (; i < input.size(); i++) {
-            if ((input.at(i) < 'A' && input.at(i) > 'z') || (input.at(i) < 'a' && input.at(i) > 'Z')) break;
+            if ((input.at(i) < 'A' && input.at(i) > 'z') || (input.at(i) < 'a' && input.at(i) > 'Z')) {
+                break;
+            }
         }
-        if (i > 0) secondUnit = input.substr(0, i);
-        else secondUnit = input;
+        if (i > 0){
+            secondUnit = input.substr(0, i);
+        }
+        else {
+            secondUnit = input;
+        }
         NumberWithUnits::checkUnits(firstUnit, secondUnit, times);
     }
 
-    void NumberWithUnits::checkUnits(string firstUnit, string secondUnit, double timesNum) {
+    void NumberWithUnits::checkUnits(const string& firstUnit,const string& secondUnit, double timesNum) {
         for (const auto &kv: map[firstUnit]) {
-            double what;
-            if (kv.second > 1) what = timesNum;
-            else what = 1 / timesNum;
+            double what=0;
+            if (kv.second > 1){
+                what = timesNum;
+            }
+            else {
+                what = 1 / timesNum;
+            }
             map[secondUnit][kv.first] = kv.second * what;
             map[kv.first][secondUnit] = 1 / (kv.second * what);
             //cout << "map[" << secondUnit <<"][" << kv.first << "] = " << kv.second * what <<endl;
@@ -135,9 +159,9 @@ namespace ariel {
         return NumberWithUnits(this->number * (-1), this->unit);
     }
 
-    float NumberWithUnits::round(double num) const{
-        float newNum = (int) (num * 100);
-        newNum = (float) newNum / 100;
+    float NumberWithUnits::round(double num){
+        float newNum = (int) (num * base);
+        newNum = (float) newNum / base;
         return newNum;
     }
 
@@ -228,18 +252,21 @@ namespace ariel {
     }
 
     static istream &getAndCheckNextCharIs(istream &input, char expectedChar) {
-        char actualChar;
+        char actualChar=' ';
         input >> actualChar;
-        if (!input) return input;
-
-        if (actualChar != expectedChar)
+        if (!input){
+            return input;
+        }
+        if (actualChar != expectedChar){
             // failbit is for format error
             input.setstate(ios::failbit);
+        }
+
         return input;
     }
 
     std::istream &operator>>(std::istream &is, NumberWithUnits &c) {
-        int num;
+        int num=0;
         string un;
         ios::pos_type startPosition = is.tellg();
         if ((!(is >> std::skipws >> num)) ||

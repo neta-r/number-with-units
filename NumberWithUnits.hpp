@@ -14,7 +14,7 @@ namespace ariel {
 
         static void lineAnalysis(std::string input);
 
-        static void checkUnits(std::string firstUnit, std::string secondUnit, double timesNum);
+        static void checkUnits(const std::string& firstUnit,const std::string& secondUnit, double timesNum);
 
     public:
 
@@ -32,9 +32,9 @@ namespace ariel {
 
         std::string getUnit ();
 
-        double getNum ();
+        double getNum () const;
 
-        float round(double num) const;
+        static float round(double num);
 
         const NumberWithUnits operator+(const NumberWithUnits &other) const;
 

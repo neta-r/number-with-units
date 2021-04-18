@@ -3,6 +3,7 @@
 #include "Test.hpp"
 #include <string>
 #include <cstdlib>
+#include <sstream>
 
 using namespace std;
 
@@ -338,4 +339,24 @@ TEST_CASE ("test *") {
             CHECK(expected3 == actual3);
     NumberWithUnits expected4(1, test.first_units[test.actual_size - 1]);
             CHECK(expected4 == b);
+}
+
+TEST_CASE ("test << and >>") {
+    Test test;
+    test.rand_file();
+    ifstream units_file{"newText.txt"};
+    NumberWithUnits::read_units(units_file);
+    NumberWithUnits a(1, test.first_units[0]);
+    string expected="1["+test.first_units[0]+']';
+    ostringstream oss;
+    oss << a;
+    string actual = oss.str();
+            CHECK(expected == actual);
+    istringstream input{"700 [ "+test.first_units[test.actual_size-1]+" ]"};
+    input >> a;
+    ostringstream oss2;
+    oss2<< a;
+    actual = oss2.str();
+    expected="700["+test.first_units[test.actual_size-1]+']';
+            CHECK(expected == actual);
 }
