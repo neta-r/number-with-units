@@ -16,7 +16,7 @@ namespace ariel {
         return this->unit;
     }
 
-    double NumberWithUnits::getNum() const{
+    double NumberWithUnits::getNum() const {
         return this->number;
     }
 
@@ -29,8 +29,7 @@ namespace ariel {
                 lineAnalysis(line);
             }
             units_file.close();
-        }
-        else{
+        } else {
             cout << "Unable to open file";
         }
     }
@@ -38,46 +37,45 @@ namespace ariel {
     void NumberWithUnits::lineAnalysis(string input) {
         string firstUnit;
         string secondUnit;
-        input.erase(input.find_first_of('='),1);
-        input.erase(input.find_first_of('1'),1);
-        double times=0;
+        input.erase(input.find_first_of('='), 1);
+        input.erase(input.find_first_of('1'), 1);
+        double times = 0;
         istringstream stream(input);
         stream >> firstUnit >> times >> secondUnit;
         NumberWithUnits::checkUnits(firstUnit, secondUnit, times);
     }
 
-    void NumberWithUnits::checkUnits(const string& firstUnit,const string& secondUnit, double timesNum) {
+    void NumberWithUnits::checkUnits(const string &firstUnit, const string &secondUnit, double timesNum) {
         for (const auto &kv: map[firstUnit]) {
-            if(map[secondUnit][kv.first]==0) {
+            if (map[secondUnit][kv.first] == 0) {
                 double what = 0;
                 if (kv.second > 1) {
                     what = timesNum;
                 } else {
                     what = 1 / timesNum;
                 }
-                map[kv.first][secondUnit] =1/(kv.second * what);
-                map[secondUnit][kv.first] =kv.second * what;
+                map[kv.first][secondUnit] = 1 / (kv.second * what);
+                map[secondUnit][kv.first] = kv.second * what;
                 //cout << "map[" << kv.first << "][" << secondUnit << "] = " << 1/(kv.second * what) << endl;
                 //cout << "map[" << secondUnit << "][" << kv.first << "] = " <<kv.second * what<< endl;
             }
         }
         for (const auto &kv: map[secondUnit]) {
-            if(map[firstUnit][kv.first]==0){
-                double what=0;
-                if (kv.second > 1){
+            if (map[firstUnit][kv.first] == 0) {
+                double what = 0;
+                if (kv.second > 1) {
                     what = timesNum;
-                }
-                else {
+                } else {
                     what = 1 / timesNum;
                 }
                 map[firstUnit][kv.first] = kv.second * what;
-                map[kv.first ][firstUnit] =1/( kv.second * what);
+                map[kv.first][firstUnit] = 1 / (kv.second * what);
                 //cout << "map[" << firstUnit <<"][" << kv.first << "] = " << kv.second * what<<endl;
                 //cout << "map[" << kv.first <<"][" << firstUnit << "] = " << 1/( kv.second * what) <<endl;
             }
         }
-        map[firstUnit][secondUnit] =timesNum;
-        map[secondUnit][firstUnit] =1/ timesNum;
+        map[firstUnit][secondUnit] = timesNum;
+        map[secondUnit][firstUnit] = 1 / timesNum;
         //cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << timesNum <<endl;
         //cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << 1 / timesNum <<endl;
     }
@@ -85,6 +83,9 @@ namespace ariel {
 
     NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits &other) const {
         double times = map[other.unit][this->unit];
+        if (this->unit == other.unit) {
+            times = 1;
+        }
         if (times == 0) { //times not found
             string message =
                     "Units do not match - [" + other.unit + "] cannot be converted to [" + this->unit + "]";
@@ -96,6 +97,9 @@ namespace ariel {
 
     NumberWithUnits NumberWithUnits::operator-(const NumberWithUnits &other) const {
         double times = map[other.unit][this->unit];
+        if (this->unit == other.unit) {
+            times = 1;
+        }
         if (times == 0) { //times not found
             string message =
                     "Units do not match - [" + other.unit + "] cannot be converted to [" + this->unit + "]";
@@ -107,6 +111,9 @@ namespace ariel {
 
     NumberWithUnits &NumberWithUnits::operator+=(const NumberWithUnits &other) {
         double times = map[other.unit][this->unit];
+        if (this->unit == other.unit) {
+            times = 1;
+        }
         if (times == 0) { //times not found
             string message = "Units do not match - [" + other.unit + "] cannot be converted to [" + this->unit + "]";
             throw std::invalid_argument(message);
@@ -118,6 +125,9 @@ namespace ariel {
 
     NumberWithUnits &NumberWithUnits::operator-=(const NumberWithUnits &other) {
         double times = map[other.unit][this->unit];
+        if (this->unit == other.unit) {
+            times = 1;
+        }
         if (times == 0) { //times not found
             string message = "Units do not match - [" + other.unit + "] cannot be converted to [" + this->unit + "]";
             throw std::invalid_argument(message);
@@ -138,14 +148,14 @@ namespace ariel {
 
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
         if (this->unit == other.unit) {
-            return std::abs(this->number-other.number)<epsilon;
+            return std::abs(this->number - other.number) < epsilon;
         }
         double times = map[other.unit][this->unit];
         if (times == 0) { // no possible way to convert from the two units
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
-        return std::abs(this->number-other.number*times)<epsilon;
+        return std::abs(this->number - other.number * times) < epsilon;
 
     }
 
@@ -155,20 +165,26 @@ namespace ariel {
 
     bool NumberWithUnits::operator>(const NumberWithUnits &other) const {
         double times = map[other.unit][this->unit];
+        if (this->unit == other.unit) {
+            times = 1;
+        }
         if (times == 0) {// no possible way to convert from the two units
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
-        return this->number >= (other.number*times)+epsilon;
+        return this->number >= (other.number * times) + epsilon;
     }
 
     bool NumberWithUnits::operator<(const NumberWithUnits &other) const {
         double times = map[other.unit][this->unit];
+        if (this->unit == other.unit) {
+            times = 1;
+        }
         if (times == 0) {// no possible way to convert from the two units
             string message = "Units does not match";
             throw std::invalid_argument(message);
         }
-        return this->number <= (other.number*times)-epsilon;
+        return this->number <= (other.number * times) - epsilon;
 
     }
 
@@ -214,37 +230,47 @@ namespace ariel {
         return (os << c.number << '[' << c.unit << ']');
     }
 
-    static istream &getAndCheckNextCharIs(istream &input, char expectedChar) {
-        char actualChar=' ';
+    static istream& getAndCheckNextCharIs(istream& input, char expectedChar) {
+        char actualChar = 0;
         input >> actualChar;
-        if (!input){
-            return input;
-        }
-        if (actualChar != expectedChar){
-            // failbit is for format error
-            input.setstate(ios::failbit);
-        }
+        if (!input) {return input;}
 
+        if (actualChar!=expectedChar)
+            // failbit is for format error
+        {input.setstate(ios::failbit);}
         return input;
     }
 
-    std::istream &operator>>(std::istream &is, NumberWithUnits &c) {
-        int num=0;
+    /* Auxiliary function for the input operator */
+    /* Handle the case if there is no white space between unit name and ']' char */
+    static bool findBracket (string& un) {
+        size_t pos=un.find_first_of(']');
+        if (pos!=string::npos) {
+            un = un.substr(0, pos);
+            return true;
+        }
+        return false;
+    }
+
+    istream& operator>>(istream& is, NumberWithUnits& c) {
+        double num = 0;
         string un;
+        // remember place for rewinding
         ios::pos_type startPosition = is.tellg();
-        if ((!(is >> std::skipws >> num)) ||
-            (!getAndCheckNextCharIs(is, '[')) ||
-            (!(is >> std::skipws >> un)) ||
-            (!(getAndCheckNextCharIs(is, ']')))) {
+        if ( (!(is >> num))                 ||
+             (!getAndCheckNextCharIs(is,'['))  ||
+             (!(is >> un))                 ||
+             ((!findBracket(un)&&!(getAndCheckNextCharIs(is,']')))) ) {
             // rewind on error
             auto errorState = is.rdstate(); // remember error state
             is.clear(); // clear error so seekg will work
             is.seekg(startPosition); // rewind
             is.clear(errorState); // set back the error flag
         } else {
+            //if (NumberWithUnits::get_unit.count(new_unit)==0) {throw invalid_argument("Illegal units!");}
             c.number = num;
             c.unit = un;
         }
         return is;
     }
-};
+}
