@@ -30,7 +30,7 @@ namespace ariel {
             }
             units_file.close();
         } else {
-            cout << "Unable to open file";
+            cout << "Unable to open file" << endl;
         }
     }
 
@@ -48,36 +48,26 @@ namespace ariel {
     void NumberWithUnits::checkUnits(const string &firstUnit, const string &secondUnit, double timesNum) {
         for (const auto &kv: map[firstUnit]) {
             if (map[secondUnit][kv.first] == 0) {
-                double what = 0;
-                if (kv.second > 1) {
-                    what = timesNum;
-                } else {
-                    what = 1 / timesNum;
-                }
-                map[kv.first][secondUnit] = 1 / (kv.second * what);
-                map[secondUnit][kv.first] = kv.second * what;
-                //cout << "map[" << kv.first << "][" << secondUnit << "] = " << 1/(kv.second * what) << endl;
-                //cout << "map[" << secondUnit << "][" << kv.first << "] = " <<kv.second * what<< endl;
+                double what = 1/kv.second;
+                map[kv.first][secondUnit] = what*timesNum;
+                map[secondUnit][kv.first] = 1/(what*timesNum);
+//                cout << "map[" << kv.first << "][" << secondUnit << "] = " << what*timesNum << endl;
+//                cout << "map[" << secondUnit << "][" << kv.first << "] = " <<1/(what*timesNum)<< endl;
             }
         }
         for (const auto &kv: map[secondUnit]) {
             if (map[firstUnit][kv.first] == 0) {
-                double what = 0;
-                if (kv.second > 1) {
-                    what = timesNum;
-                } else {
-                    what = 1 / timesNum;
-                }
-                map[firstUnit][kv.first] = kv.second * what;
-                map[kv.first][firstUnit] = 1 / (kv.second * what);
-                //cout << "map[" << firstUnit <<"][" << kv.first << "] = " << kv.second * what<<endl;
-                //cout << "map[" << kv.first <<"][" << firstUnit << "] = " << 1/( kv.second * what) <<endl;
+                double what = 1/kv.second;
+                map[firstUnit][kv.first] = timesNum*(1/what);
+                map[kv.first][firstUnit] = 1/(timesNum*(1/what));
+//                cout << "map[" << firstUnit <<"][" << kv.first << "] = " << timesNum*(1/what)<<endl;
+//                cout << "map[" << kv.first <<"][" << firstUnit << "] = " << 1/(timesNum*(1/what))<<endl;
             }
         }
         map[firstUnit][secondUnit] = timesNum;
         map[secondUnit][firstUnit] = 1 / timesNum;
-        //cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << timesNum <<endl;
-        //cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << 1 / timesNum <<endl;
+//        cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << timesNum <<endl;
+//        cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << 1 / timesNum <<endl;
     }
 
 
@@ -267,9 +257,13 @@ namespace ariel {
             is.seekg(startPosition); // rewind
             is.clear(errorState); // set back the error flag
         } else {
-            //if (NumberWithUnits::get_unit.count(new_unit)==0) {throw invalid_argument("Illegal units!");}
-            c.number = num;
-            c.unit = un;
+            if (NumberWithUnits::map.find (un)!=NumberWithUnits::map.end()){ //the unit exist in stock
+                c.number = num;
+                c.unit = un;
+            }
+            else{
+                throw std::invalid_argument{"no such unit in stock"};
+            }
         }
         return is;
     }
