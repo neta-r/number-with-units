@@ -109,7 +109,7 @@ void unary_arithmetic_operators() {
             NumberWithUnits a{num1, firstUnit};
             double num;
             cout << "please enter number to multiply by: " << endl;
-            cin >> num1;
+            cin >> num;
             try {
                 NumberWithUnits a{num1, firstUnit};
                 cout << a * num << endl;
