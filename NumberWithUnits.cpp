@@ -6,7 +6,6 @@ using namespace std;
 
 namespace ariel {
     const double epsilon = 0.001;
-    const int base = 100;
 
     std::unordered_map <std::string, std::unordered_map<std::string, double>> NumberWithUnits::map =
             std::unordered_map < std::string, std::unordered_map<std::string, double>>
@@ -37,8 +36,8 @@ namespace ariel {
     void NumberWithUnits::lineAnalysis(string input) {
         string firstUnit;
         string secondUnit;
-        input.erase(input.find_first_of('='), 1);
-        input.erase(input.find_first_of('1'), 1);
+        input.erase(input.find_first_of('='), 1); //removing =
+        input.erase(input.find_first_of('1'), 1); //removing 1
         double times = 0;
         istringstream stream(input);
         stream >> firstUnit >> times >> secondUnit;
@@ -46,34 +45,28 @@ namespace ariel {
     }
 
     void NumberWithUnits::checkUnits(const string &firstUnit, const string &secondUnit, double timesNum) {
-        for (const auto &kv: map[firstUnit]) {
+        for (const auto &kv: map[firstUnit]) { //going over the first unit's neighbors in the map
             if (map[secondUnit][kv.first] == 0) {
                 double what = 1/kv.second;
                 map[kv.first][secondUnit] = what*timesNum;
                 map[secondUnit][kv.first] = 1/(what*timesNum);
-//                cout << "map[" << kv.first << "][" << secondUnit << "] = " << what*timesNum << endl;
-//                cout << "map[" << secondUnit << "][" << kv.first << "] = " <<1/(what*timesNum)<< endl;
             }
         }
-        for (const auto &kv: map[secondUnit]) {
+        for (const auto &kv: map[secondUnit]) { //going over the second unit's neighbors in the map
             if (map[firstUnit][kv.first] == 0) {
                 double what = 1/kv.second;
                 map[firstUnit][kv.first] = timesNum*(1/what);
                 map[kv.first][firstUnit] = 1/(timesNum*(1/what));
-//                cout << "map[" << firstUnit <<"][" << kv.first << "] = " << timesNum*(1/what)<<endl;
-//                cout << "map[" << kv.first <<"][" << firstUnit << "] = " << 1/(timesNum*(1/what))<<endl;
             }
         }
-        map[firstUnit][secondUnit] = timesNum;
+        map[firstUnit][secondUnit] = timesNum; //adding first and second to map
         map[secondUnit][firstUnit] = 1 / timesNum;
-//        cout << "map[" << firstUnit <<"][" << secondUnit << "] = " << timesNum <<endl;
-//        cout << "map[" << secondUnit <<"][" << firstUnit << "] = " << 1 / timesNum <<endl;
     }
 
 
     NumberWithUnits NumberWithUnits::operator+(const NumberWithUnits &other) const {
         double times = map[other.unit][this->unit];
-        if (this->unit == other.unit) {
+        if (this->unit == other.unit) { //no need to convert
             times = 1;
         }
         if (times == 0) { //times not found
@@ -87,7 +80,7 @@ namespace ariel {
 
     NumberWithUnits NumberWithUnits::operator-(const NumberWithUnits &other) const {
         double times = map[other.unit][this->unit];
-        if (this->unit == other.unit) {
+        if (this->unit == other.unit) { //no need to convert
             times = 1;
         }
         if (times == 0) { //times not found
@@ -101,7 +94,7 @@ namespace ariel {
 
     NumberWithUnits &NumberWithUnits::operator+=(const NumberWithUnits &other) {
         double times = map[other.unit][this->unit];
-        if (this->unit == other.unit) {
+        if (this->unit == other.unit) { //no need to convert
             times = 1;
         }
         if (times == 0) { //times not found
@@ -115,7 +108,7 @@ namespace ariel {
 
     NumberWithUnits &NumberWithUnits::operator-=(const NumberWithUnits &other) {
         double times = map[other.unit][this->unit];
-        if (this->unit == other.unit) {
+        if (this->unit == other.unit) { //no need to convert
             times = 1;
         }
         if (times == 0) { //times not found
@@ -137,7 +130,7 @@ namespace ariel {
 
 
     bool NumberWithUnits::operator==(const NumberWithUnits &other) const {
-        if (this->unit == other.unit) {
+        if (this->unit == other.unit) { //no need to convert
             return std::abs(this->number - other.number) < epsilon;
         }
         double times = map[other.unit][this->unit];
@@ -154,7 +147,7 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator>(const NumberWithUnits &other) const {
-        double times = map[other.unit][this->unit];
+        double times = map[other.unit][this->unit]; //no need to convert
         if (this->unit == other.unit) {
             times = 1;
         }
@@ -166,7 +159,7 @@ namespace ariel {
     }
 
     bool NumberWithUnits::operator<(const NumberWithUnits &other) const {
-        double times = map[other.unit][this->unit];
+        double times = map[other.unit][this->unit]; //times not found
         if (this->unit == other.unit) {
             times = 1;
         }
@@ -231,8 +224,7 @@ namespace ariel {
         return input;
     }
 
-    /* Auxiliary function for the input operator */
-    /* Handle the case if there is no white space between unit name and ']' char */
+    //sometimes the second unit swallows ']' so we need to remove it
     static bool findBracket (string& un) {
         size_t pos=un.find_first_of(']');
         if (pos!=string::npos) {
