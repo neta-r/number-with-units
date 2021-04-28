@@ -7,8 +7,8 @@ using namespace std;
 namespace ariel {
     const double epsilon = 0.001;
 
-    std::unordered_map <std::string, std::unordered_map<std::string, double>> NumberWithUnits::map =
-            std::unordered_map < std::string, std::unordered_map<std::string, double>>
+    unordered_map <string, unordered_map<string, double>> NumberWithUnits::map =
+            unordered_map < string, unordered_map<string, double>>
     ();
 
     string NumberWithUnits::getUnit() {
